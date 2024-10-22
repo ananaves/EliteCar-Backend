@@ -8,8 +8,6 @@ export class PedidoVenda {
 
     /* Atributos */
 
-    /* Identificador do Pedido */
-    private idPedidoVenda: number = 0;
     /* Identificador do carro */
     private idCarro: number = 0;
     /* Identificador do cliente */
@@ -78,7 +76,7 @@ export class PedidoVenda {
      *
      * @returns {Date} A data do pedido.
      */
-    public getdataPedido(): Date {
+    public getDataPedido(): Date {
         return this.dataPedido;
     }
 
@@ -87,7 +85,7 @@ export class PedidoVenda {
      * 
      * @param dataPedido - A data do pedido a ser definida.
      */
-    public setdataPedido(dataPedido: Date): void {
+    public setDataPedido(dataPedido: Date): void {
         this.dataPedido = dataPedido;
     }
 
@@ -96,7 +94,7 @@ export class PedidoVenda {
      *
      * @returns {number} O valor do pedido.
      */
-    public getvalorPedido(): number {
+    public getValorPedido(): number {
         return this.valorPedido;
     }
 
@@ -105,7 +103,7 @@ export class PedidoVenda {
      *
      * @param valorPedido - O numero do valor do pedido.
      */
-    public setvalorpedido(valorPedido: number): void {
+    public setValorpedido(valorPedido: number): void {
         this.valorPedido = valorPedido;
     }
 
@@ -168,8 +166,8 @@ export class PedidoVenda {
                                         VALUES
                                         ('${pedido_venda.getIdCarro()}', 
                                         '${pedido_venda.getIdCliente()}', 
-                                        '${pedido_venda.getdataPedido()}',
-                                        '${pedido_venda.getvalorPedido()}')
+                                        '${pedido_venda.getDataPedido()}',
+                                        '${pedido_venda.getValorPedido()}')
                                         RETURNING id_PedidoVenda;`;
 
             // executa a query no banco e armazena a resposta
