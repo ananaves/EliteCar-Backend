@@ -19,7 +19,7 @@ export class PedidoVenda {
     /* valor do pedido */
     private valorPedido: number;
     setIdPedidoVenda: any;
- 
+
     /**
      * Construtor da classe PedidoVenda.
      * @param idCarro identificador do carro
@@ -71,7 +71,7 @@ export class PedidoVenda {
     public setIdCliente(idCliente: number): void {
         this.idCliente = idCliente;
     }
-    
+
 
     /**
      * Retorna a data do Pedido.
@@ -136,8 +136,8 @@ export class PedidoVenda {
 
                 listaDePedidoVenda.push(novoPedidoVenda);
 
-            });    
-            
+            });
+
             return listaDePedidoVenda;
 
 
@@ -146,4 +146,53 @@ export class PedidoVenda {
             return null;
         }
     }
+
+    /**
+     * Realiza o cadastro de um Pedido e Venda no banco de dados.
+     * 
+     * Esta função recebe um objeto do tipo `PedidoVenda` e insere seus dados (id_carro, id_cliente, data_pedido, valor_pedido)
+     * na tabela `pedido_venda` do banco de dados. O método retorna um valor booleano indicando se o cadastro 
+     * foi realizado com sucesso.
+     * @param {PedidoVenda} pedido_venda - Objeto contendo os dados do pedidoVenda que será cadastrado. O objeto `PedidoVenda`
+    deve conter os métodos `getIdCarro()`, `getIdCliente()`, `getDataPedido(), `getValorPedido`
+    que retornam os respectivos valores do pedidoVenda.
+     * @returns {Promise<boolean>} - Retorna `true` se o PedidoVenda foi cadastrado com sucesso e `false` caso contrário.
+      Em caso de erro durante o processo, a função trata o erro e retorna `false`.
+     * @throws {Error} - Se ocorrer algum erro durante a execução do cadastro, uma mensagem de erro é exibida
+      no console junto com os detalhes do erro.
+     */
+    static async cadastroPedidoVenda(pedido_venda: PedidoVenda): Promise<boolean> {
+        try {
+            // query para fazer insert de um pedidoVenda no banco de dados
+            const queryInsertPedidoVenda = `INSERT INTO pedido_venda (id_carro, id_cliente, data_pedido, valor_pedido)
+                                        VALUES
+                                        ('${pedido_venda.getIdCarro()}', 
+                                        '${pedido_venda.getIdCliente()}', 
+                                        '${pedido_venda.getdataPedido()}',
+                                        '${pedido_venda.getvalorPedido()}')
+                                        RETURNING id_PedidoVenda;`;
+
+            // executa a query no banco e armazena a resposta
+            const respostaBD = await database.query(queryInsertPedidoVenda);
+
+            // verifica se a quantidade de linhas modificadas é diferente de 0
+            if (respostaBD.rowCount != 0) {
+                console.log(`Pedido e Venda cadastrado com sucesso! ID do PedidoVenda: ${respostaBD.rows[0].id_PedidoVenda}`);
+                // true significa que o cadastro foi feito
+                return true;
+            }
+            // false significa que o cadastro NÃO foi feito.
+            return false;
+
+            // tratando o erro
+        } catch (error) {
+            // imprime outra mensagem junto com o erro
+            console.log('Erro ao cadastrar o Pedido e Venda. Verifique os logs para mais detalhes.');
+            // imprime o erro no console
+            console.log(error);
+            // retorno um valor falso
+            return false;
+        }
+    }
+
 }
