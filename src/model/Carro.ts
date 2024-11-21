@@ -218,5 +218,95 @@ export class Carro {
             return false;
         }
     }
+    /**
+         * Remove um carro do banco de dados com base no ID fornecido.
+         * 
+         * Esta função executa uma operação de exclusão na tabela carro para remover um registro cujo id_carro 
+         * corresponda ao valor fornecido. Ela retorna um valor booleano indicando o sucesso ou a falha da operação.
+         * 
+         * @param {number} idCarro - O identificador único do carro que será removido do banco de dados.
+         * @returns {Promise<boolean>} - Retorna true se o carro foi removido com sucesso, ou false caso contrário.
+         *                                Em caso de erro, a função trata a exceção e retorna false.
+         * 
+         * @throws {Error} - Exibe uma mensagem de erro no console e os detalhes do erro caso a remoção falhe.
+         */
+
+
+    static async removerCarro(idCarro: number): Promise<boolean> {
+        try {
+            // Cria uma query SQL para deletar o carro do banco de dados baseado no ID.
+            const queryDeleteCarro = `DELETE FROM carro WHERE id_carro = ${idCarro}`;
+
+            // Executa a query no banco de dados e armazena a resposta.
+            const respostaBD = await database.query(queryDeleteCarro);
+
+            // Verifica se alguma linha foi afetada pela operação de exclusão.
+            if (respostaBD.rowCount != 0) {
+                // Loga uma mensagem de sucesso no console indicando que o carro foi removido.
+                console.log(`Carro removido com sucesso! ID removido: ${idCarro}`);
+                // Retorna true para indicar sucesso na remoção.
+                return true;
+            }
+
+            // Retorna false se nenhuma linha foi afetada (nenhum carro removido).
+            return false;
+
+        } catch (error) {
+            // Exibe uma mensagem de erro no console caso ocorra uma exceção.
+            console.log('Erro ao remover carro. Verifique os logs para mais detalhes.');
+            // Loga o erro no console para depuração.
+            console.log(error);
+            // Retorna false indicando que a remoção falhou.
+            return false;
+        }
+    }
+
+    /**
+     * Atualiza os dados de um carro no banco de dados.
+     * 
+     * Esta função atualiza as informações de um carro na tabela carro com base nos valores do objeto 
+     * Carro fornecido. Ela verifica se a operação foi bem-sucedida e retorna um valor booleano.
+     * 
+     * @param {Carro} carro - Objeto contendo os dados atualizados do carro. O objeto deve possuir os métodos 
+     *                        getMarca(), getModelo(), getAno(), getCor() e getIdCarro() para acessar 
+     *                        as informações do carro.
+     * @returns {Promise<boolean>} - Retorna true se os dados do carro foram atualizados com sucesso ou false 
+     *                                caso contrário. Em caso de erro, a função trata a exceção e retorna false.
+     * 
+     * @throws {Error} - Exibe uma mensagem de erro no console e os detalhes do erro caso a atualização falhe.
+     */
+    static async atualizarCarro(carro: Carro): Promise<boolean> {
+        try {
+            // Cria uma query SQL para atualizar os dados do carro no banco de dados.
+            const queryUpdateCarro = `UPDATE carro SET
+                                    marca = '${carro.getMarca()}',
+                                    modelo = '${carro.getModelo()}',
+                                    ano = ${carro.getAno()},
+                                    cor = '${carro.getCor()}'
+                                  WHERE id_carro = ${carro.getIdCarro()};`;
+
+            // Executa a query no banco de dados e armazena a resposta.
+            const respostaBD = await database.query(queryUpdateCarro);
+
+            // Verifica se alguma linha foi alterada pela operação de atualização.
+            if (respostaBD.rowCount != 0) {
+                // Loga uma mensagem de sucesso no console indicando que o carro foi atualizado.
+                console.log(`Carro atualizado com sucesso! ID: ${carro.getIdCarro()}`);
+                // Retorna true para indicar sucesso na atualização.
+                return true;
+            }
+
+            // Retorna false se nenhuma linha foi alterada (atualização não realizada).
+            return false;
+
+        } catch (error) {
+            // Exibe uma mensagem de erro no console caso ocorra uma exceção.
+            console.log('Erro ao atualizar o carro. Verifique os logs para mais detalhes.');
+            // Loga o erro no console para depuração.
+            console.log(error);
+            // Retorna false indicando que a atualização falhou.
+            return false;
+        }
+    }
 }
 
